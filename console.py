@@ -16,29 +16,34 @@ from models.amenity import Amenity
 from models.review import Review
 import models
 
-class HBNBCommand(cmd.Cmd):
-    '''
-        Contains the entry point of the command interpreter.
-    '''
 
+class HBNBCommand(cmd.Cmd):
+    """
+    Contains the functionality for the HBNB console.
+    """
+
+    # determines prompt for interactive/non-interactive modes
     prompt = ("(hbnb) ")
+
     def do_quit(self, args):
-        '''
-            Quit command to exit the program.
-        '''
+        """
+        Quit command to exit the program.
+        """
         return True
 
     def do_EOF(self, args):
-        '''
-            Exits after receiving the EOF signal.
-        '''
+        """
+        Exits after receiving the EOF signal.
+        """
+
         return True
 
     def do_create(self, args):
-        '''
-            Create a new instance of class BaseModel and saves it
-            to the JSON file.
-        '''
+        """
+        Create a new instance of class BaseModel and saves it
+        to the JSON file.
+        """
+
         if len(args) == 0:
             print("** class name missing **")
             return
@@ -49,7 +54,7 @@ class HBNBCommand(cmd.Cmd):
                 new_instance.save()
                 print(new_instance.id)
 
-            except:
+            except Exception:
                 print("** class doesn't exist **")
         else:
             try:
@@ -61,19 +66,24 @@ class HBNBCommand(cmd.Cmd):
                     if hasattr(obj, arg[0]):
                         try:
                             arg[1] = eval(arg[1])
-                        except:
-                            arg[1] = arg[1].replace('_',' ')
+
+                        except Exception:
+                            arg[1] = arg[1].replace('_', ' ')
                         setattr(obj, arg[0], arg[1])
 
                 obj.save()
-            except:
+
+            except Exception:
                 return
+
             print(obj.id)
+
     def do_show(self, args):
-        '''
-            Print the string representation of an instance baed on
-            the class name and id given as args.
-        '''
+        """
+        Print the string representation of an instance baed on
+        the class name and id given as args.
+        """
+
         args = shlex.split(args)
         if len(args) == 0:
             print("** class name missing **")
@@ -81,7 +91,7 @@ class HBNBCommand(cmd.Cmd):
         if len(args) == 1:
             print("** instance id missing **")
             return
-        #
+
         models.storage.reload()
         obj_dict = models.storage.all()
         try:
@@ -98,9 +108,10 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
 
     def do_destroy(self, args):
-        '''
-            Deletes an instance based on the class name and id.
-        '''
+        """
+        Deletes an instance based on the class name and id.
+        """
+
         args = shlex.split(args)
         if len(args) == 0:
             print("** class name missing **")
@@ -110,7 +121,7 @@ class HBNBCommand(cmd.Cmd):
             return
         class_name = args[0]
         class_id = args[1]
-        #
+
         models.storage.reload()
         obj_dict = models.storage.all()
         try:
@@ -126,12 +137,12 @@ class HBNBCommand(cmd.Cmd):
         models.storage.save()
 
     def do_all(self, args):
-        '''
-            Prints all string representation of all instances
-            based or not on the class name.
-        '''
+        """
+        Prints all string representation of all instances
+        based or not on the class name.
+        """
+
         obj_list = []
-        #
         models.storage.reload()
         objects = models.storage.all()
         try:
@@ -150,11 +161,11 @@ class HBNBCommand(cmd.Cmd):
         print(obj_list)
 
     def do_update(self, args):
-        '''
-            Update an instance based on the class name and id
-            sent as args.
-        '''
-        #
+        """
+        Update an instance based on the class name and id
+        sent as args.
+        """
+
         models.storage.reload()
         args = shlex.split(args)
         if len(args) == 0:
@@ -190,17 +201,18 @@ class HBNBCommand(cmd.Cmd):
         obj_value.save()
 
     def emptyline(self):
-        '''
-            Prevents printing anything when an empty line is passed.
-        '''
+        """
+        Prevents printing anything when an empty line is passed.
+        """
+
         pass
 
     def do_count(self, args):
-        '''
-            Counts/retrieves the number of instances.
-        '''
+        """
+        Counts/retrieves the number of instances.
+        """
+
         obj_list = []
-        #
         models.storage.reload()
         objects = models.storage.all()
         try:
@@ -218,9 +230,10 @@ class HBNBCommand(cmd.Cmd):
         print(len(obj_list))
 
     def default(self, args):
-        '''
-            Catches all the function names that are not expicitly defined.
-        '''
+        """
+        Catches all the function names that are not expicitly defined.
+        """
+
         functions = {"all": self.do_all, "update": self.do_update,
                      "show": self.do_show, "count": self.do_count,
                      "destroy": self.do_destroy, "update": self.do_update}
@@ -231,12 +244,10 @@ class HBNBCommand(cmd.Cmd):
             cmd_arg = args[0] + " " + args[2]
             func = functions[args[1]]
             func(cmd_arg)
-        except:
+
+        except Exception:
             print("*** Unknown syntax:", args[0])
 
 
 if __name__ == "__main__":
-    '''
-        Entry point for the loop.
-    '''
     HBNBCommand().cmdloop()

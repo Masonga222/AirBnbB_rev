@@ -1,7 +1,8 @@
 #!/usr/bin/python3
-'''
-    This module creates the schema for BaseModel class
-'''
+"""
+This module defines a base class for all models in our hbnb clone
+"""
+
 import sqlalchemy
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, DateTime
@@ -13,17 +14,19 @@ Base = declarative_base()
 
 
 class BaseModel:
-    '''
-        Base class for other classes to be used for the duration.
-    '''
+    """
+    Base class for other classes to be used for the duration.
+    """
+
     id = Column(String(60), nullable=False, primary_key=True)
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
     updated_at = Column(DateTime, nullable=False, default=datetime.utcnow())
 
     def __init__(self, *args, **kwargs):
-        '''
-            Initialize public instance attributes.
-        '''
+        """
+        Class connstructor.
+        """
+
         if (len(kwargs) == 0):
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
@@ -46,45 +49,51 @@ class BaseModel:
                 self.id = str(uuid.uuid4())
 
     def __str__(self):
-        '''
-            Return string representation of BaseModel class
-        '''
+        """
+        Return string representation of BaseModel class
+        """
+
         return ("[{}] ({}) {}".format(self.__class__.__name__,
                                       self.id, self.__dict__))
 
     def __repr__(self):
-        '''
-            Return string representation of BaseModel class
-        '''
+        """
+        Return string representation of BaseModel class
+        """
+
         return ("[{}] ({}) {}".format(self.__class__.__name__,
                                       self.id, self.__dict__))
 
     def save(self):
-        '''
-            Update the updated_at attribute with new.
-        '''
+        """
+        Update the updated_at attribute with new.
+        """
+
         self.updated_at = datetime.now()
         models.storage.new(self)
         models.storage.save()
 
     def to_dict(self):
-        '''
-            Return dictionary representation of BaseModel class.
-        '''
-        cp_dct = dict(self.__dict__)
-        cp_dct['__class__'] = self.__class__.__name__
-        if 'updated_at' in cp_dct:
-            cp_dct['updated_at'] = self.updated_at.strftime(
+        """
+        Return dictionary representation of BaseModel class.
+        """
+
+        dic = dict(self.__dict__)
+        dic['__class__'] = self.__class__.__name__
+        if 'updated_at' in dic:
+            dic['updated_at'] = self.updated_at.strftime(
                 "%Y-%m-%dT%H:%M:%S.%f")
-        if 'created_at' in cp_dct:
-            cp_dct['created_at'] = self.created_at.strftime(
+        if 'created_at' in dic:
+            dic['created_at'] = self.created_at.strftime(
                 "%Y-%m-%dT%H:%M:%S.%f")
-        if '_sa_instance_state' in cp_dct:
-            del cp_dct['_sa_instance_state']
-        return (cp_dct)
+        if '_sa_instance_state' in dic:
+            del dic['_sa_instance_state']
+
+        return (dic)
 
     def delete(self):
-        '''
-            Deletes instance from dict
-        '''
+        """
+        Deletes instance from dict
+        """
+
         models.storage.delete(self)

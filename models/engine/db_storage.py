@@ -1,4 +1,8 @@
 #!/usr/bin/python3
+"""
+New engine DBStorage
+"""
+
 from sqlalchemy import create_engine
 from sqlalchemy import MetaData
 from sqlalchemy.orm import sessionmaker
@@ -17,16 +21,18 @@ classes = {"Amenity": Amenity, "City": City, "Place": Place,
 
 
 class DBStorage:
-    '''
+    """
     Database storage class
-    '''
+    """
+
     __engine = None
     __session = None
 
     def __init__(self):
-        '''
+        """
         Defines DBStorage class instances
-        '''
+        """
+
         self.__engine = create_engine("mysql+mysqldb://{}:{}@{}/{}".format(
             os.getenv("HBNB_MYSQL_USER"), os.getenv("HBNB_MYSQL_PWD"),
             os.getenv("HBNB_MYSQL_HOST"), os.getenv("HBNB_MYSQL_DB")),
@@ -35,9 +41,10 @@ class DBStorage:
             Base.metadata.drop_all(bind=self.__engine)
 
     def all(self, cls=None):
-        '''
+        """
         Returns dictionary of all objects in the database
-        '''
+        """
+
         allobjs = {}
         if cls:
             allobjs = {obj.__class__.__name__ + "." + obj.id: obj for
@@ -50,28 +57,32 @@ class DBStorage:
         return allobjs
 
     def new(self, obj):
-        '''
+        """
         Adds new object to current session
-        '''
+        """
+
         if obj:
             self.__session.add(obj)
 
     def save(self):
-        '''
+        """
         Saves new object to the database
-        '''
+        """
+
         self.__session.commit()
 
     def delete(self, obj=None):
-        '''
+        """
         Deletes object in current session
-        '''
+        """
+
         self.__session.delete(obj)
 
     def reload(self):
-        '''
+        """
         Loads all objects from database and creates new session
-        '''
+        """
+
         Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(bind=self.__engine,
                                        expire_on_commit=False)

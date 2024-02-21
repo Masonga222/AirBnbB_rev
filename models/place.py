@@ -1,7 +1,6 @@
 #!/usr/bin/python3
-'''
-    Define the class Place.
-'''
+""" Place Module for HBNB project """
+
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, Table, Integer, ForeignKey, Float
 from sqlalchemy.orm import relationship
@@ -24,10 +23,12 @@ place_amenity = Table(
 
 
 class Place(BaseModel, Base):
-    '''
-        Define the class Place that inherits from BaseModel.
-    '''
+    """
+    Define the class Place that inherits from BaseModel.
+    """
+
     __tablename__ = "places"
+
     city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
     user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
     name = Column(String(128), nullable=False)
@@ -39,6 +40,8 @@ class Place(BaseModel, Base):
     latitude = Column(Float, nullable=True)
     longitude = Column(Float, nullable=True)
     amenity_ids = []
+
+    """
     amenities = relationship("Amenity", secondary=place_amenity,
                              back_populates="place_amenities", viewonly=False)
 
@@ -51,9 +54,11 @@ class Place(BaseModel, Base):
                                                       .format(amenity))
                 if amenityObj:
                     objlist.append(amenityObj)
+
             return objlist
 
         @amenities.setter
         def amenities(self, obj):
             if isinstance(obj, Amenity):
                 self.amenity_ids.append(obj.id)
+    """

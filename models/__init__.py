@@ -1,7 +1,6 @@
 #!/usr/bin/python3
-'''
-    Package initializer
-'''
+"""This module instantiates an object of class FileStorage"""
+
 from models.base_model import BaseModel
 from models.user import User
 from models.place import Place
